@@ -1,0 +1,29 @@
+[
+    {
+      "question": "What is the capital of France?",
+      "options": {
+        "a": "Paris",
+        "b": "Lyon",
+        "c": "Marseille",
+        "d": "Nice"
+      }
+    },
+    {
+      "question": "Which planet is known as the 'Red Planet'?",
+      "options": {
+        "a": "Venus",
+        "b": "Mars",
+        "c": "Jupiter",
+        "d": "Saturn"
+      }
+    },
+    {
+      "question": "What is the chemical symbol for water?",
+      "options": {
+        "a": "CO2",
+        "b": "H2O",
+        "c": "NaCl",
+        "d": "O2"
+      }
+    }
+  ]

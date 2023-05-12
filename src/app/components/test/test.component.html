@@ -1,0 +1,19 @@
+<form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
+  <div formArrayName="questionsArray">
+    <mat-card *ngFor="let question of questions; index as i">
+      <mat-card-title>{{i + 1}}. {{question.question}}</mat-card-title>
+      <mat-card-content>
+        <mat-radio-group [formControlName]="i">
+          <mat-radio-button
+            *ngFor="let optionKey of ['a', 'b', 'c', 'd']"
+            [value]="optionKey"
+            [attr.aria-label]="'Option ' + optionKey.toUpperCase() + ': ' + question.options[optionKey]"
+          >
+            {{question.options[optionKey]}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <button mat-raised-button type="submit" aria-label="Submit quiz">Submit</button>
+</form>
