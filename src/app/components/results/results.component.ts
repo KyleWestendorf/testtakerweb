@@ -1,19 +1,34 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AsyncPipe, NgIf } from '@angular/common';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { filter } from 'rxjs';
+import {
+  TestingStateService,
+} from 'src/app/services/testing-state/testing-state.service';
+import { createChart } from '../utilities/create-chart';
 
 @Component({
   standalone: true,
   selector: 'app-results',
   templateUrl: './results.component.html',
-  styleUrls: ['./results.component.scss']
+  styleUrls: ['./results.component.scss'],
+  imports: [NgIf, AsyncPipe],
 })
 export class ResultsComponent implements OnInit {
-  @Input() results: boolean[] = [];
+  @ViewChild('chart', { static: true, read: ElementRef })
+  private chartContainer!: ElementRef;
 
-  get trueCount(): number {
-    return this.results.filter(result => result === true).length;
+  constructor(public testingState: TestingStateService) {}
+ 
+  ngOnInit(): void {
+    this.testingState.resultState$
+      .pipe(filter((value) => !!value))
+      .subscribe((value) => {
+        createChart(value, this.chartContainer);
+      });
   }
-
-  constructor() {}
-
-  ngOnInit(): void {}
 }

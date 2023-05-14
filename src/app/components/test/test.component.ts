@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ApiService, Question } from 'src/app/services/api/api.service';
-import { TestingStateService } from 'src/app/services/testing-state/testing-state.service';
+import { TestingStateService, TestPerformanceMetrics } from 'src/app/services/testing-state/testing-state.service';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -42,11 +42,14 @@ export class TestComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.quizForm.value);
-    this.apiService.gradeEachQuestion(this.quizForm.value.questionsArray, 'abc').subscribe(results => { this.state.resultState = results });
-    
-    // this.apiService.gradeQuestions(this.quizForm.value.questionsArray, 'abc').subscribe(results => {
-    //   this.state.resultState = results;
-    // });
+    this.apiService.gradeEachQuestion(this.quizForm.value.questionsArray, 'abc').subscribe(results => { 
+      const metrics: TestPerformanceMetrics = {
+        numberOfCorrectAnswers: results.filter(result => result).length,
+        numberOfUnansweredQuestions: this.quizForm.value.questionsArray.filter((result: string) => result === '').length,
+        incorrectQuestionIds: results.map((value, index) => (value === false ? index + 1 : null)).filter((value) => value !== null) as number[],
+        totalNumberOfQuestions: this.questions.length
+      }
+      this.state.resultState = metrics;
+    });
   }
 }
