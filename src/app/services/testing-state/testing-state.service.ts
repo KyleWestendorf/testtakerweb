@@ -9,9 +9,10 @@ import { BehaviorSubject, tap } from 'rxjs';
 })
 export class TestingStateService {
   quizState$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
-
+  resultState$: BehaviorSubject<boolean[]> = new BehaviorSubject<boolean[]>([]);
   constructor() {
     this.quizState$.pipe(tap(console.log), untilDestroyed(this)).subscribe();
+    this.resultState$.pipe(tap(console.log), untilDestroyed(this)).subscribe();
   }
 
   set quizState(state: any) {
@@ -20,5 +21,13 @@ export class TestingStateService {
 
   get quizState(): any {
     return this.quizState$.getValue();
+  }
+
+  set resultState(state: any) {
+    this.resultState$.next(state);
+  }
+
+  get resultState(): boolean[] {
+    return this.resultState$.getValue();
   }
 }

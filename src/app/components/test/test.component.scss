@@ -1,11 +1,17 @@
 form {
     width: 100%;
-    max-width: 50rem;
     padding: 15px;
-    margin: auto;
-    font-size: 2rem;
 }
 
 .mat-radio-button {
     margin: .5rem 1rem;
+}
+
+:host {
+    display: block;
+    width: 100%;
+    max-width: 50rem;
+    margin: auto;
+    padding: 15px;
+    font-size: 2rem;
 }

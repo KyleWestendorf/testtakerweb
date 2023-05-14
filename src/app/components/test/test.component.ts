@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+import { AsyncPipe, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -7,20 +7,21 @@ import { TestingStateService } from 'src/app/services/testing-state/testing-stat
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { ResultsComponent } from '../results/results.component';
 
 @UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.scss'],
-  imports: [ReactiveFormsModule, NgFor, MatCardModule, MatButtonModule, MatRadioModule],
+  imports: [ReactiveFormsModule, NgFor, MatCardModule, MatButtonModule, MatRadioModule, ResultsComponent, AsyncPipe],
   providers: [ApiService]
 })
 export class TestComponent implements OnInit {
   questions: Question[] = [];
   quizForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private apiService: ApiService, private state: TestingStateService) {
+  constructor(private formBuilder: FormBuilder, private apiService: ApiService, public state: TestingStateService) {
     this.quizForm = this.formBuilder.group({
       questionsArray: new FormArray([])
     });
@@ -43,7 +44,7 @@ export class TestComponent implements OnInit {
   onSubmit(): void {
     console.log(this.quizForm.value);
     this.apiService.gradeQuestions(this.quizForm.value.questionsArray, 'abc').subscribe(results => {
-      console.log('results', results);
+      this.state.resultState = results;
     });
   }
 }
