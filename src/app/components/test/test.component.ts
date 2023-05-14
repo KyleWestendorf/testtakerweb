@@ -35,12 +35,15 @@ export class TestComponent implements OnInit {
       });
     });
 
-    this.quizForm.valueChanges.subscribe(value => {
+    this.quizForm.valueChanges.pipe(untilDestroyed(this)).subscribe(value => {
       this.state.quizState = value.questionsArray;
     });
   }
 
   onSubmit(): void {
     console.log(this.quizForm.value);
+    this.apiService.gradeQuestions(this.quizForm.value.questionsArray, 'abc').subscribe(results => {
+      console.log('results', results);
+    });
   }
 }

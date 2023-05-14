@@ -4,6 +4,7 @@
       <mat-card-title>{{i + 1}}. {{question.question}}</mat-card-title>
       <mat-card-content>
         <mat-radio-group [formControlName]="i">
+          <mat-radio-button [value]="null" [checked]="true">None</mat-radio-button>
           <mat-radio-button
             *ngFor="let optionKey of ['a', 'b', 'c', 'd']"
             [value]="optionKey"

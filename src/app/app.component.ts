@@ -8,3 +8,6 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'TestTakerWeb';
 }
+
+// TODO: 
+// Figure out the mock authentication piece
