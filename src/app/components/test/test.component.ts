@@ -43,8 +43,10 @@ export class TestComponent implements OnInit {
 
   onSubmit(): void {
     console.log(this.quizForm.value);
-    this.apiService.gradeQuestions(this.quizForm.value.questionsArray, 'abc').subscribe(results => {
-      this.state.resultState = results;
-    });
+    this.apiService.gradeEachQuestion(this.quizForm.value.questionsArray, 'abc').subscribe(results => { this.state.resultState = results });
+    
+    // this.apiService.gradeQuestions(this.quizForm.value.questionsArray, 'abc').subscribe(results => {
+    //   this.state.resultState = results;
+    // });
   }
 }

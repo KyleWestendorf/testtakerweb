@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError, map } from 'rxjs';
+import { Observable, catchError, throwError, map, of, forkJoin, toArray } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +16,7 @@ export class ApiService {
     }))
   }
 
+  // I believe some variation on this is the quickest way to get the results
   gradeQuestions(studentAnswers: string[], testIdentifier: string): Observable<boolean[]> {
     return this.client
       .get<TestAnswers[]>(`${this.baseUrl}/tests/${testIdentifier}/answers`)
@@ -32,18 +33,23 @@ export class ApiService {
       );
   }
 
+  // If I'm understanding correctly, this is the proper way to get the results, likely due to the need to obfuscate the answers
+  gradeEachQuestion(studentAnswers: string[], testIdentifier: string): Observable<boolean[]> {
+    const results: Observable<boolean>[] = [];
+    studentAnswers.forEach((answer, index) => {
+      results.push(this.gradeQuestion(answer, testIdentifier, index + 1));
+    });
+
+    return forkJoin(results);
+  }
+
   gradeQuestion(studentAnswer: string, testIdentifier: string, questionNumber: number): Observable<boolean> {
+    if(!studentAnswer) {
+      return of(false);
+    }
+
     return this.client
-      .get<TestAnswers[]>(`${this.baseUrl}/tests/${testIdentifier}/question/${questionNumber}/check?answer=${studentAnswer}`)
-      .pipe(
-        map(testAnswers => {
-          let answer = testAnswers[questionNumber];
-          if(studentAnswer === null) {
-            return false;
-          }
-          return answer.correctResponse.toLowerCase() === studentAnswer.toLowerCase();
-        })
-      );
+      .get<boolean>(`${this.baseUrl}/tests/${testIdentifier}/questions/${questionNumber}/check?answer=${studentAnswer}`);
   }
 }
 
