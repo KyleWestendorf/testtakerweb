@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BehaviorSubject, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 
 // Generally I would use NGRX for state, but this is an example
 @UntilDestroy()
