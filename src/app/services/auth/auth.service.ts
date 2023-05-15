@@ -1,14 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, user, User} from '@angular/fire/auth';
+import { Router } from '@angular/router';
+import {  Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private auth: Auth) {}
-  
+  currentUser: User | null = null;
+  constructor(private auth: Auth, private router: Router) {
+    this.userStream().subscribe((user) => {
+      this.currentUser = user;
+      this.router.navigate(['/testing']);
+    });
+  }
+
   async login(username: string, password: string): Promise<boolean> {
-    if(this.isAuthenticated()) {
+    if (this.isAuthenticated()) {
       return true;
     }
 
@@ -22,9 +30,11 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return (
-      !!this.auth.currentUser
-    );
+    return !!this.currentUser;
+  }
+
+  userStream(): Observable<User | null> {
+    return user(this.auth);
   }
 
   async logout(): Promise<void> {

@@ -33,11 +33,9 @@ export class LoginComponent implements OnInit {
     const {username, password } = this.loginForm.value;
     const loggedIn = await this.authService.login(username, password);
 
-    if (loggedIn) {
-      await this.router.navigate(['/testing']); 
-    } else {
+    if (!loggedIn) {
       alert('Could not log in. Please try again.');
-    }
+    };
   }
 
 }
