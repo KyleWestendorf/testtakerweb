@@ -9,7 +9,7 @@ import { filter } from 'rxjs';
 import {
   TestingStateService,
 } from 'src/app/services/testing-state/testing-state.service';
-import { createChart } from '../utilities/create-chart';
+import { createChart } from '../../utilities/create-chart';
 
 @Component({
   standalone: true,

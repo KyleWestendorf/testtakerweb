@@ -10,7 +10,6 @@ export class AuthService {
   constructor(private cookieService: CookieService) { }
 
   login(username: string, password: string): Observable<boolean> {
-    // TODO: Maybe move this logic to the backend service?
     if (username === 'admin' && password === 'test') {
       this.cookieService.set('access_token', 'your-access-token');
       return of(true);
