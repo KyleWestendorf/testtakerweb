@@ -42,7 +42,7 @@ export class TestComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.apiService.gradeEachQuestion(this.quizForm.value.questionsArray, 'abc').subscribe(results => { 
+    this.apiService.gradeEachQuestion(this.quizForm.value.questionsArray, 'abc').pipe(untilDestroyed(this)).subscribe(results => { 
       const metrics: TestPerformanceMetrics = {
         numberOfCorrectAnswers: results.filter(result => result).length,
         numberOfUnansweredQuestions: this.quizForm.value.questionsArray.filter((result: string) => result === '').length,

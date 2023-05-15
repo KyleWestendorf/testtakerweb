@@ -5,12 +5,14 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { filter } from 'rxjs';
 import {
   TestingStateService,
 } from 'src/app/services/testing-state/testing-state.service';
 import { createChart } from '../../utilities/create-chart';
 
+@UntilDestroy()
 @Component({
   standalone: true,
   selector: 'app-results',
@@ -26,7 +28,7 @@ export class ResultsComponent implements OnInit {
  
   ngOnInit(): void {
     this.testingState.resultState$
-      .pipe(filter((value) => !!value))
+      .pipe(filter((value) => !!value), untilDestroyed(this))
       .subscribe((value) => {
         createChart(value, this.chartContainer);
       });
