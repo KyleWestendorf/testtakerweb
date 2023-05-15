@@ -1,27 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
+import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
+  constructor(private auth: Auth) {}
 
-  constructor(private cookieService: CookieService) { }
-
-  login(username: string, password: string): Observable<boolean> {
-    if (username === 'admin' && password === 'test') {
-      this.cookieService.set('access_token', 'your-access-token');
-      return of(true);
+  async login(username: string, password: string): Promise<boolean> {
+    if(this.isAuthenticated()) {
+      return true;
     }
-    return of(false);
+
+    try {
+      await signInWithEmailAndPassword(this.auth, username, password);
+      return true;
+    } catch (error) {
+      console.error('Error during login:', error);
+      return false;
+    }
   }
 
   isAuthenticated(): boolean {
-    return this.cookieService.check('access_token') && this.cookieService.get('access_token') === 'your-access-token';
+    return (
+      !!this.auth.currentUser
+    );
   }
 
   logout(): void {
-    this.cookieService.delete('access_token');
+    this.auth.signOut();
   }
 }

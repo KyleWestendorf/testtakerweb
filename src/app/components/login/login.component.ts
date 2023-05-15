@@ -29,15 +29,15 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     const {username, password } = this.loginForm.value;
-    this.authService.login(username, password).subscribe((loggedIn) => {
-      if (loggedIn) {
-        this.router.navigate(['/testing']); 
-      } else {
-        alert('Invalid credentials. Please try again.');
-      }
-    });
+    const loggedIn = await this.authService.login(username, password);
+
+    if (loggedIn) {
+      await this.router.navigate(['/testing']); 
+    } else {
+      alert('Could not log in. Please try again.');
+    }
   }
 
 }
